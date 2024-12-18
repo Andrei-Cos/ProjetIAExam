@@ -51,7 +51,11 @@ Autre obverservation, on a pris 50k sample et bah dessus on a remarque que y a 3
 
 
 
-TODO: verifier avec le dataset de base ou bien récupérer que quelques variables styles du premier data augment et faire une pca dessus (demandez aux esclaves) et puis comparer
+TODO: verifier avec le dataset de base ou bien récupérer que quelques variables styles du premier data augment et faire une pca dessus (demandez aux esclaves) et puis compare
+
+UPDATE : Still same nigger shit donc good for me. A vérifier avec les autres
+
+
 
 
 
