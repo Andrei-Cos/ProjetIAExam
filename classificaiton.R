@@ -88,7 +88,7 @@ evaluate_model <- function(pred, true_class, model_name) {
   cm <- confusionMatrix(pred, true_class)
   error_rate <- 1 - cm$overall['Accuracy']
   cat("\n", model_name, "Results:\n")
-  print(cm)
+  print(cm$table)  # Display the confusion matrix
   cat("Error Rate:", error_rate, "\n")
   return(list(cm=cm, error_rate=error_rate))
 }
