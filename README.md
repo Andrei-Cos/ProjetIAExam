@@ -60,11 +60,13 @@ This project contains various R scripts for data analysis, classification, regre
   - `tidyr`
 
 ### Installation
-1. Clone this repository:
+1. Clone this private repository (ensure you have access):
    ```bash
-   git clone https://github.com/USERNAME/ProjetIAExam.git
+   git clone git@github.com:Andrei-Cos/ProjetIAExam.git
    ```
+
 2. Open the R scripts in RStudio or a compatible editor.
+
 3. Execute the scripts in the desired order of analysis.
 
 ## Usage
@@ -104,3 +106,4 @@ If you wish to contribute to this project:
 
 ## License
 This project is licensed under [LICENSE] - see the `LICENSE` file for details.
+
