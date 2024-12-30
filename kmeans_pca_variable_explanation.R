@@ -17,6 +17,16 @@ mydata <- read.csv("Online_Retail_Clean_Enhanced.csv", header = TRUE, stringsAsF
 rm(list=setdiff(ls(), "mydata"))
 gc()
 
+library(factoextra)
+
+# Calcul de l'inertie pour différents K
+fviz_nbclust(pca_coords, kmeans, method = "wss") +
+  labs(title = "Méthode du coude", 
+       x = "Nombre de clusters (K)", 
+       y = "Inertie intra-classe") +
+  theme_minimal()
+
+
 # Première approche : Variables originales (avec nettoyage mémoire)
 original_vars <- mydata %>% 
   select(Quantity, UnitPrice)
@@ -50,6 +60,9 @@ print(round(pca_original$var$contrib, 2))
 cat("\nContributions des variables (Approche avec variables dérivées):\n")
 print(round(pca_derived$var$contrib, 2))
 
+# ===================== Analyse complète : PCA + Clustering (version très optimisée) =====================
+
+
 # Nettoyage avant le clustering
 rm(pca_original)
 gc()
@@ -68,7 +81,7 @@ km_res <- kmeans(pca_coords, centers = k, nstart = 25)
 fviz_cluster(km_res, data = pca_coords,
              geom = "point",
              ellipse.type = "convex",
-             palette = c("#0072B2", "#009E73", "#D55E00"),
+             palette = c("#0072B2", "#009E73", "#D55E00"), 
              main = "Clustering basé sur PCA",
              ggtheme = theme_minimal())
 
