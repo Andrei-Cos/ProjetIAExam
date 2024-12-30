@@ -45,7 +45,7 @@ mydata_selected[, char_cols] <- lapply(mydata_selected[, char_cols], as.factor)
 ########################################
 set.seed(123)
 N <- nrow(mydata_selected)
-index <- sample(1:N, size = round(N/3), replace = FALSE)
+index <- sample(1:N, size = round(N/3), replace = FALSE) #Split 2/3 pour train et 1/3 pour comparer ces resultats
 
 # Create training and test sets
 training.set <- mydata_selected[-index, features]
@@ -94,7 +94,7 @@ evaluate_model <- function(pred, true_class, model_name) {
 }
 
 # 1. k-NN
-k <- 8
+k <- 3
 knn_pred <- knn(training.set_numeric, test.set_numeric, training.class, k = k)
 knn_results <- evaluate_model(knn_pred, test.class, "k-NN")
 
