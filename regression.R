@@ -1,5 +1,5 @@
 # ---------------------------------------------------------
-# Charger les bibliothèques nécessaires
+# Charger les library 
 # ---------------------------------------------------------
 library(ggplot2)
 library(dplyr)
@@ -11,57 +11,68 @@ library(tidyr)
 data <- read.csv("Online_Retail_Clean_Enhanced.csv")
 
 # ---------------------------------------------------------
-# 2) Graphiques exploratoires
+# 2) Transformation logarithmique des variables
 # ---------------------------------------------------------
-# 2a) Nuage de points (Quantity vs. TotalAmount) avec ligne de régression
-scatter_plot <- ggplot(data, aes(x = Quantity, y = TotalAmount)) +
+# Ajouter une petite constante pour éviter log(0)
+data <- data %>%
+  mutate(
+    Log_TotalAmount = log1p(TotalAmount),  # log(1 + x)
+    Log_Quantity = log1p(Quantity)
+  )
+
+# ---------------------------------------------------------
+# 3) Graphiques exploratoires après transformation
+# ---------------------------------------------------------
+# 3a) Nuage de points (Log_Quantity vs. Log_TotalAmount) avec ligne de régression
+scatter_plot <- ggplot(data, aes(x = Log_Quantity, y = Log_TotalAmount)) +
   geom_point(alpha = 0.5, color = "blue") +
   geom_smooth(method = "lm", color = "red") +
-  labs(title = "Quantity vs Total Amount",
-       x = "Quantity",
-       y = "Total Amount") +
+  labs(title = "Log(Quantity) vs Log(Total Amount)",
+       x = "Log(Quantity)",
+       y = "Log(Total Amount)") +
   theme_minimal()
 
-# 2b) Histogrammes
-hist_amount <- ggplot(data, aes(x = TotalAmount)) +
+# 3b) Histogrammes
+hist_log_amount <- ggplot(data, aes(x = Log_TotalAmount)) +
   geom_histogram(bins = 30, fill = "skyblue", color = "black") +
-  labs(title = "Distribution of Total Amount",
-       x = "Total Amount",
+  labs(title = "Distribution of Log(Total Amount)",
+       x = "Log(Total Amount)",
        y = "Frequency") +
   theme_minimal()
 
-hist_quantity <- ggplot(data, aes(x = Quantity)) +
+hist_log_quantity <- ggplot(data, aes(x = Log_Quantity)) +
   geom_histogram(bins = 30, fill = "lightgreen", color = "black") +
-  labs(title = "Distribution of Quantity",
-       x = "Quantity",
+  labs(title = "Distribution of Log(Quantity)",
+       x = "Log(Quantity)",
        y = "Frequency") +
   theme_minimal()
 
-# 2c) Graphe Q-Q
-qq_plot <- ggplot(data, aes(sample = TotalAmount)) +
+# 3c)  Q-Q Plot 
+qq_plot_log <- ggplot(data, aes(sample = Log_TotalAmount)) +
   stat_qq() +
   stat_qq_line() +
-  labs(title = "Q-Q Plot: Total Amount",
+  labs(title = "Q-Q Plot: Log(Total Amount)",
        x = "Theoretical Quantiles",
        y = "Sample Quantiles") +
   theme_minimal()
 
 # ---------------------------------------------------------
-# 3) Analyse statistique
+# 4) Analyse statistique
 # ---------------------------------------------------------
-# 3a) Test de corrélation
-correlation <- cor.test(data$Quantity, data$TotalAmount)
+
+correlation_log <- cor.test(data$Log_Quantity, data$Log_TotalAmount)
 
 # ---------------------------------------------------------
-# 4) Afficher les résultats dans la console
+# 5) Afficher les résultats dans la console
 # ---------------------------------------------------------
-cat("\nCorrelation Analysis:")
-print(correlation)
+cat("\nCorrelation Analysis (Log-Transformed):")
+print(correlation_log)
 
 # ---------------------------------------------------------
-# 5) Afficher les graphiques
+# 6) Afficher les graphiques
 # ---------------------------------------------------------
 scatter_plot
-hist_amount
-hist_quantity
-qq_plot
+hist_log_amount
+hist_log_quantity
+qq_plot_log
+
