@@ -1,87 +1,67 @@
-# Load required libraries
+# ---------------------------------------------------------
+# Charger les bibliothèques nécessaires
+# ---------------------------------------------------------
 library(ggplot2)
 library(dplyr)
 library(tidyr)
-# Read the CSV file
+
+# ---------------------------------------------------------
+# 1) Lire le fichier CSV
+# ---------------------------------------------------------
 data <- read.csv("Online_Retail_Clean_Enhanced.csv")
-# Create a scatterplot of Quantity vs TotalAmount to check for linear relationship
-plot1 <- ggplot(data, aes(x = Quantity, y = TotalAmount)) +
-  geom_point(alpha = 0.5) +
+
+# ---------------------------------------------------------
+# 2) Graphiques exploratoires
+# ---------------------------------------------------------
+# 2a) Nuage de points (Quantity vs. TotalAmount) avec ligne de régression
+scatter_plot <- ggplot(data, aes(x = Quantity, y = TotalAmount)) +
+  geom_point(alpha = 0.5, color = "blue") +
   geom_smooth(method = "lm", color = "red") +
-  theme_minimal() +
-  labs(title = "Scatter Plot: Quantity vs Total Amount",
+  labs(title = "Quantity vs Total Amount",
        x = "Quantity",
        y = "Total Amount") +
-  theme(plot.title = element_text(hjust = 0.5))
-# Create histograms for key numerical variables
-plot2 <- ggplot(data, aes(x = TotalAmount)) +
+  theme_minimal()
+
+# 2b) Histogrammes
+hist_amount <- ggplot(data, aes(x = TotalAmount)) +
   geom_histogram(bins = 30, fill = "skyblue", color = "black") +
-  theme_minimal() +
   labs(title = "Distribution of Total Amount",
        x = "Total Amount",
        y = "Frequency") +
-  theme(plot.title = element_text(hjust = 0.5))
-plot3 <- ggplot(data, aes(x = Quantity)) +
+  theme_minimal()
+
+hist_quantity <- ggplot(data, aes(x = Quantity)) +
   geom_histogram(bins = 30, fill = "lightgreen", color = "black") +
-  theme_minimal() +
   labs(title = "Distribution of Quantity",
        x = "Quantity",
        y = "Frequency") +
-  theme(plot.title = element_text(hjust = 0.5))
-# Create Q-Q plots to check for normality
-plot4 <- ggplot(data, aes(sample = TotalAmount)) +
+  theme_minimal()
+
+# 2c) Graphe Q-Q
+qq_plot <- ggplot(data, aes(sample = TotalAmount)) +
   stat_qq() +
   stat_qq_line() +
-  theme_minimal() +
   labs(title = "Q-Q Plot: Total Amount",
        x = "Theoretical Quantiles",
        y = "Sample Quantiles") +
-  theme(plot.title = element_text(hjust = 0.5))
-# Calculate correlation coefficient
+  theme_minimal()
+
+# ---------------------------------------------------------
+# 3) Analyse statistique
+# ---------------------------------------------------------
+# 3a) Test de corrélation
 correlation <- cor.test(data$Quantity, data$TotalAmount)
-# Save the plots
-pdf("sales_analysis_plots.pdf")
-print(plot1)
-print(plot2)
-print(plot3)
-print(plot4)
-dev.off()
-# Perform Shapiro-Wilk test for normality
-# shapiro_test_amount <- shapiro.test(data$TotalAmount)
-# shapiro_test_quantity <- shapiro.test(data$Quantity)
-# Print statistical results
+
+# ---------------------------------------------------------
+# 4) Afficher les résultats dans la console
+# ---------------------------------------------------------
 cat("\nCorrelation Analysis:")
 print(correlation)
-# cat("\nShapiro-Wilk Test for Total Amount:")
-# print(shapiro_test_amount)
-# cat("\nShapiro-Wilk Test for Quantity:")
-# print(shapiro_test_quantity)
-# Load required libraries
-library(ggplot2)
-# Read your data
-data <- read.csv("Online_Retail_Clean_Enhanced.csv")
-# Create scatterplot with regression line
-scatter_plot <- ggplot(data, aes(x=Quantity, y=TotalAmount)) +
-  geom_point(alpha=0.5, color="blue") +
-  geom_smooth(method=lm, color="red") +
-  labs(title="Quantity vs Total Amount",
-       x="Quantity",
-       y="Total Amount") +
-  theme_minimal()
-# Create histogram for checking distribution
-histogram_plot <- ggplot(data, aes(x=TotalAmount)) +
-  geom_histogram(bins=30, fill="skyblue", color="black") +
-  labs(title="Distribution of Total Amount",
-       x="Total Amount",
-       y="Count") +
-  theme_minimal()
-# Create Q-Q plot for checking normality
-qq_plot <- ggplot(data, aes(sample=TotalAmount)) +
-  stat_qq() +
-  stat_qq_line() +
-  labs(title="Q-Q Plot of Total Amount") +
-  theme_minimal()
-# Display plots
+
+# ---------------------------------------------------------
+# 5) Afficher les graphiques
+# ---------------------------------------------------------
 scatter_plot
-histogram_plot
+hist_amount
+hist_quantity
 qq_plot
