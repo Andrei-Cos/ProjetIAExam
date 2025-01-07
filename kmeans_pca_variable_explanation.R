@@ -19,12 +19,7 @@ gc()
 
 library(factoextra)
 
-# Calcul de l'inertie pour différents K
-fviz_nbclust(pca_coords, kmeans, method = "wss") +
-  labs(title = "Méthode du coude", 
-       x = "Nombre de clusters (K)", 
-       y = "Inertie intra-classe") +
-  theme_minimal()
+
 
 
 # Première approche : Variables originales (avec nettoyage mémoire)
@@ -72,6 +67,14 @@ pca_coords <- pca_derived$ind$coord[, 1:2]  # Garder seulement 2 dimensions
 rm(pca_derived)
 gc()
 
+
+# Calcul de l'inertie pour différents K
+fviz_nbclust(pca_coords, kmeans, method = "wss") +
+  labs(title = "Méthode du coude", 
+       x = "Nombre de clusters (K)", 
+       y = "Inertie intra-classe") +
+  theme_minimal()
+
 # K-means directement
 k <- 3
 set.seed(123)
@@ -117,10 +120,22 @@ ggplot(cluster_long,
   stat_summary(fun = mean, geom = "line") +
   stat_summary(fun = mean, geom = "point", size = 3) +
   theme_minimal() +
-  labs(title = "Profil moyen des clusters",
-       y = "Valeur standardisée",
-       x = "Variable") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  scale_color_manual(
+    values = c("1" = "#0072B2", "2" = "#009E73", "3" = "#D55E00"),
+    labels = c("Gros Acheteurs en Volume", "Acheteurs Standards", "Acheteurs Premium")
+  ) +
+  labs(
+    title = "Profil moyen des clusters",
+    y = "Valeur standardisée",
+    x = "Variable",
+    color = "Clusters"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9)
+  )
+
 
 # Nettoyage final
 gc()
