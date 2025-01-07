@@ -80,13 +80,6 @@ k <- 3
 set.seed(123)
 km_res <- kmeans(pca_coords, centers = k, nstart = 25)
 
-# Visualisation des clusters
-fviz_cluster(km_res, data = pca_coords,
-             geom = "point",
-             ellipse.type = "convex",
-             palette = c("#0072B2", "#009E73", "#D55E00"), 
-             main = "Clustering basé sur PCA",
-             ggtheme = theme_minimal())
 
 # Statistiques des clusters
 clustering_results <- derived_vars %>%
@@ -99,7 +92,6 @@ cluster_stats <- clustering_results %>%
     avg_quantity = mean(Quantity),
     avg_price = mean(UnitPrice),
     avg_total = mean(TotalAmount),
-    avg_items = mean(ItemsPerTransaction),
     .groups = 'drop'
   ) %>%
   mutate(percentage = n/sum(n) * 100)
@@ -107,34 +99,7 @@ cluster_stats <- clustering_results %>%
 print("\nStatistiques des clusters:")
 print(cluster_stats)
 
-# Profil des clusters
-cluster_long <- clustering_results %>%
-  select(Quantity, UnitPrice, TotalAmount, ItemsPerTransaction, Cluster) %>%
-  mutate(across(-Cluster, scale)) %>%
-  tidyr::pivot_longer(-Cluster, 
-                      names_to = "Variable", 
-                      values_to = "Value")
 
-ggplot(cluster_long, 
-       aes(x = Variable, y = Value, color = Cluster, group = interaction(Cluster))) +
-  stat_summary(fun = mean, geom = "line") +
-  stat_summary(fun = mean, geom = "point", size = 3) +
-  theme_minimal() +
-  scale_color_manual(
-    values = c("1" = "#0072B2", "2" = "#009E73", "3" = "#D55E00"),
-    labels = c("Gros Acheteurs en Volume", "Acheteurs Standards", "Acheteurs Premium")
-  ) +
-  labs(
-    title = "Profil moyen des clusters",
-    y = "Valeur standardisée",
-    x = "Variable",
-    color = "Clusters"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.title = element_text(size = 10),
-    legend.text = element_text(size = 9)
-  )
 
 
 # Nettoyage final
